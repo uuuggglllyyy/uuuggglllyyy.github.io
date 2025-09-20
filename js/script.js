@@ -12,10 +12,47 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mobile menu
     const menuBtn = document.querySelector('.mobile-menu-btn');
     const nav = document.querySelector('.nav');
+    const body = document.body;
+    let menuOpen = false;
 
-    menuBtn.addEventListener('click', function() {
+    function toggleMenu() {
+        menuOpen = !menuOpen;
         menuBtn.classList.toggle('active');
         nav.classList.toggle('active');
+        body.classList.toggle('no-scroll');
+    }
+
+    function closeMenu() {
+        if (menuOpen) {
+            menuOpen = false;
+            menuBtn.classList.remove('active');
+            nav.classList.remove('active');
+            body.classList.remove('no-scroll');
+        }
+    }
+
+    menuBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleMenu();
+    });
+
+    // Close mobile menu when clicking on links
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function() {
+            closeMenu();
+        });
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (menuOpen && !e.target.closest('.nav') && !e.target.closest('.mobile-menu-btn')) {
+            closeMenu();
+        }
+    });
+
+    // Close menu on scroll
+    window.addEventListener('scroll', function() {
+        closeMenu();
     });
 
     // Smooth scrolling for navigation links
@@ -23,9 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
         link.addEventListener('click', function(e) {
             e.preventDefault();
 
-            // Close mobile menu if open
-            menuBtn.classList.remove('active');
-            nav.classList.remove('active');
+            closeMenu();
 
             const targetId = this.getAttribute('href');
             const targetSection = document.querySelector(targetId);
@@ -38,16 +73,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Animation on scroll
+    // Animation on scroll - используем другой класс для анимаций
     function checkScroll() {
-        const elements = document.querySelectorAll('.animate-top, .animate-bottom, .animate-left, .animate-right, .animate-opacity');
+        const elements = document.querySelectorAll('.scroll-animate');
 
         elements.forEach(element => {
             const elementPosition = element.getBoundingClientRect().top;
             const windowHeight = window.innerHeight;
 
             if (elementPosition < windowHeight - 100) {
-                element.classList.add('active');
+                element.classList.add('animated');
             }
         });
     }

@@ -73,9 +73,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Animation on scroll - используем другой класс для анимаций
+    // Animation on scroll
     function checkScroll() {
-        const elements = document.querySelectorAll('.scroll-animate');
+        const elements = document.querySelectorAll('.scroll-animate, .scroll-animate-left, .scroll-animate-right, .scroll-animate-bottom');
 
         elements.forEach(element => {
             const elementPosition = element.getBoundingClientRect().top;
